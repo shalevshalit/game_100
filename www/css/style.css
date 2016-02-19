@@ -1,3 +1,8 @@
+@font-face {
+  font-family: curved;
+  src: url(../fonts/PWChalk.ttf);
+}
+
 .board-outer.has-footer {
   bottom: 45px;
 }
@@ -24,7 +29,10 @@
 }
 
 .board-col.clicked {
-  box-shadow: inset 2px 2px 30px rgba(0,0,0,0.5);
+  font-family: curved;
+  color: rgba(0, 0, 0,0.8);
+  font-weight: bolder;
+  box-shadow: inset 2px 2px 30px rgba(0, 0, 0, 0.5);
 }
 
 .board-col-inner {
