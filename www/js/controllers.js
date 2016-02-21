@@ -4,8 +4,15 @@ angular.module('game100.controllers', [])
 
   })
 
-  .controller('HomeCtrl', function () {
+  .controller('HomeCtrl', function ($scope) {
+    $scope.sendMail = function () {
+      if (window.cordova)
+        window.plugins.emailComposer.showEmailComposerWithCallback(function () {
 
+        }, 'Contact about 100 game', '', 'shalevshalit@gmail.com');
+      else
+        window.open('mailto:shalevshalit@gmail.com')
+    }
   })
 
   .controller('BoardCtrl', function ($scope, $timeout, $ionicPopup, $state) {
