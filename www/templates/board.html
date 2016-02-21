@@ -1,9 +1,9 @@
 <ion-view ng-scroll="false">
   <div class="bar bar-header bar-calm header-dark-wood">
-    <button class="button button-icon icon ion-navicon"></button>
+    <button class="button button-icon icon ion-home" ui-sref="home"></button>
     <div class="h1 title">100</div>
   </div>
-  <ion-content class="board-outer has-header has-footer">
+  <ion-content class="board-outer has-header has-footer" scroll="false">
     <div class="board-row" ng-repeat="x in lengthArray">
       <div class="board-col calm-border"
            ng-class="{'clicked':colNumber}"

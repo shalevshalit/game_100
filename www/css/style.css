@@ -30,7 +30,7 @@
 
 .board-col.clicked {
   font-family: curved;
-  color: rgba(0, 0, 0,0.8);
+  color: rgba(0, 0, 0, 0.8);
   font-weight: bolder;
   box-shadow: inset 2px 2px 30px rgba(0, 0, 0, 0.5);
 }
@@ -57,4 +57,12 @@
 
 .header-dark-wood {
   background: url("../img/dark_wood.jpg") !important;
+}
+
+.popup {
+  width: 90% !important;
+}
+
+.popup-button:before {
+  display: block !important;
 }
