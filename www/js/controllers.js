@@ -1,9 +1,7 @@
 angular.module('game100.controllers', [])
 
   .controller('MainCtrl', function ($scope, $state) {
-    $scope.go = function (state, reload) {
-      $state.go(state, {}, {reload: reload});
-    };
+
   })
 
   .controller('HomeCtrl', function () {
@@ -17,9 +15,29 @@ angular.module('game100.controllers', [])
     $scope.oldRedo = [];
     $scope.checkLose = null;
 
+    $scope.alertRestart = function (onConfirm, skipConfirm) {
+      if ($scope.number > 1 && !skipConfirm)
+        $ionicPopup.confirm({
+          title: 'Exit Game',
+          template: 'Are you sure you want to leave the game?'
+        }).then(function (res) {
+          if (res)
+            onConfirm();
+        });
+      else
+        onConfirm();
+    };
+
+    $scope.goHome = function () {
+      $scope.alertRestart(function () {
+        $scope.restart(true);
+        $state.go('home');
+      });
+    };
+
     $scope.setCurrent = function (x, y, redo) {
       $timeout.cancel($scope.checkLose);
-      $scope.oldCords.push(x + ',' + y);
+      $scope.oldCords.push($scope.currentX + ',' + $scope.currentY);
       $scope.oldRedo.push(redo);
 
       $scope.currentX = x;
@@ -66,17 +84,19 @@ angular.module('game100.controllers', [])
       }
     };
 
-    $scope.restart = function () {
-      $timeout.cancel($scope.checkLose);
-      if ($scope.number > 1) {
-        $scope.currentX = null;
-        $scope.currentY = null;
-        $scope.oldCords = [];
-        $scope.oldRedo.forEach(function (redo) {
-          redo();
-        });
-        $scope.number = 1;
-      }
+    $scope.restart = function (skipConfirm) {
+      $scope.alertRestart(function () {
+        $timeout.cancel($scope.checkLose);
+        if ($scope.number > 1) {
+          $scope.currentX = null;
+          $scope.currentY = null;
+          $scope.oldCords = [];
+          $scope.oldRedo.forEach(function (redo) {
+            redo();
+          });
+          $scope.number = 1;
+        }
+      }, skipConfirm);
     };
 
     $scope.anyJumpable = function () {

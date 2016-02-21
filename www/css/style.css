@@ -1,3 +1,7 @@
+ion-content {
+  background: url('../img/background.jpg');
+}
+
 @font-face {
   font-family: curved;
   src: url(../fonts/PWChalk.ttf);
@@ -65,4 +69,29 @@
 
 .popup-button:before {
   display: block !important;
+}
+
+.home-list {
+  background-color: transparent !important;
+}
+
+.home-list a {
+  border-color: black;
+  text-align: center;
+  background-position-y: center;
+  background-size: cover;
+  background-image: url(../img/wood.jpg);
+  margin-bottom: 2vh;
+}
+
+.home-list a.activated {
+  border: inset 1px white;
+}
+
+.logo {
+  padding: 20px;
+}
+
+.logo img {
+  width: 100%;
 }
