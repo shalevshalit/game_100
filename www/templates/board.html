@@ -13,7 +13,7 @@
            ng-click="setNumber()">
         <div class="board-col-inner">
           <div ng-show="colNumber">{{colNumber}}</div>
-          <i ng-hide="colNumber || !isClickable()" class="icon button-balanced clickable ion-arrow-shrink"></i>
+          <i ng-hide="colNumber || !isClickable()" class="icon button-balanced clickable ion-ios-circle-filled"></i>
         </div>
       </div>
     </div>
@@ -22,8 +22,7 @@
     <a class="tab-item" ng-click="revert()">
       <i class="icon ion-arrow-return-left"></i>
     </a>
-    <a class="tab-item">
-      <!--<i class="icon ion-star"></i>-->
+    <a class="tab-item" disabled="disabled">
       {{number - 1}}
     </a>
     <a class="tab-item" ng-click="restart()">

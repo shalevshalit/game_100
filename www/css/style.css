@@ -7,6 +7,12 @@ ion-content {
   src: url(../fonts/PWChalk.ttf);
 }
 
+.title {
+  font-family: curved;
+  font-weight: bolder !important;
+  font-size: 35px !important;
+}
+
 .board-outer.has-footer {
   bottom: 45px;
 }
