@@ -37,7 +37,9 @@ ion-content {
   border: 2px outset #c7801a;
   text-align: center;
   position: relative;
-  background: url("../img/retina_wood.png");
+  background-size: cover !important;
+  background: url("../img/block.png") center center;
+  border-radius: 5px;
 }
 
 .board-col.clicked {
@@ -45,13 +47,15 @@ ion-content {
   color: rgba(0, 0, 0, 0.8);
   font-weight: bolder;
   box-shadow: inset 2px 2px 30px rgba(0, 0, 0, 0.5);
+  border: 2px inset #c7801a;
+  background: url("../img/retina_wood.png") center center;
 }
 
 .board-col-inner {
   position: absolute;
   top: 50%;
-  right: 50%;
-  margin-right: -5.25px;
+  right: 0;
+  left: 0;
   margin-top: -7px;
 }
 

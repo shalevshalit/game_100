@@ -26,8 +26,8 @@ angular.module('game100.controllers', [])
     $scope.alertRestart = function (onConfirm, skipConfirm) {
       if ($scope.number > 1 && !skipConfirm)
         $ionicPopup.confirm({
-          title: 'Exit Game',
-          template: 'Are you sure you want to leave the game?'
+          title: 'Reset Game',
+          template: 'Are you sure you want to reset the game?'
         }).then(function (res) {
           if (res)
             onConfirm();
