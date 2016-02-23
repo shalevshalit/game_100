@@ -1,10 +1,6 @@
 angular.module('game100.controllers', [])
 
   .controller('MainCtrl', function ($scope, $state) {
-
-  })
-
-  .controller('HomeCtrl', function ($scope) {
     $scope.sendMail = function () {
       if (window.cordova)
         window.plugins.emailComposer.showEmailComposerWithCallback(function () {
@@ -12,7 +8,7 @@ angular.module('game100.controllers', [])
         }, 'Contact about 100 game', '', 'shalevshalit@gmail.com');
       else
         window.open('mailto:shalevshalit@gmail.com')
-    }
+    };
   })
 
   .controller('BoardCtrl', function ($scope, $timeout, $ionicPopup, $state) {

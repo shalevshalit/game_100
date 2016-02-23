@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('game100', ['ionic', 'game100.controllers', 'game100.services'])
+angular.module('game100', ['ionic', 'game100.controllers'])
 
   .run(function ($ionicPlatform) {
     $ionicPlatform.ready(function () {
@@ -30,8 +30,7 @@ angular.module('game100', ['ionic', 'game100.controllers', 'game100.services'])
 
       .state('home', {
         url: '/',
-        templateUrl: 'templates/home.html',
-        controller: 'HomeCtrl'
+        templateUrl: 'templates/home.html'
       })
 
       .state('board', {

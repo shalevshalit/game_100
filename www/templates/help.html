@@ -3,19 +3,62 @@
     <button class="button button-icon icon ion-home" ui-sref="home"></button>
     <div class="h1 title">Help</div>
   </div>
-  <ion-content class="has-header">
-    <ion-slide-box>
-      <ion-slide>
-        <div class="box blue">
-          <div><img src="../img/logo.png"/></div>
+  <ion-slide-box class="help-slide">
+    <ion-slide>
+      <div class="box">
+        <div class="help-desc">
+          <ul>
+            <li>Press on the green dot to add a number to a square.</li>
+            <li>The next Number must be <b>3 jumps to the left/right/top/bottom side</b> and <b>2 jumps to a
+              diagonal</b>.
+            </li>
+            <li>You cannot press on a square that already has number in it.</li>
+          </ul>
         </div>
-      </ion-slide>
-      <ion-slide>
-        <div class="box yellow"><h1>YELLOW</h1></div>
-      </ion-slide>
-      <ion-slide>
-        <div class="box pink"><h1>PINK</h1></div>
-      </ion-slide>
-    </ion-slide-box>
-  </ion-content>
+        <div class="help-img">
+          <img src="../img/help/help1.jpg"/>
+        </div>
+      </div>
+    </ion-slide>
+    <ion-slide>
+      <div class="box">
+        <div class="help-desc">
+          <ul>
+            <li>Revert - go to last state before last number assign.</li>
+            <li>Score - shows you the last number you pressed.</li>
+            <li>Restart - Reset the board.</li>
+          </ul>
+        </div>
+        <div class="help-img">
+          <img src="../img/help/help2.jpg"/>
+        </div>
+      </div>
+    </ion-slide>
+    <ion-slide>
+      <div class="help-desc">
+        <ul>
+          <li>Reach 100 to win the game.</li>
+        </ul>
+      </div>
+      <div class="help-img">
+        <img src="../img/help/help3.jpg"/>
+      </div>
+    </ion-slide>
+    <ion-slide>
+      <div class="help-desc">
+        <ul>
+          <li>The game was created by <a ng-click="sendMail()">Shalev Shalit</a>.</li>
+          <li><a href="http://www.freepik.com/free-vector/wooden-plaque-pack_831973.htm">Designed by Freepik</a>.</li>
+        </ul>
+      </div>
+      <div class="help-logo">
+        <img src="../img/logo.png"/>
+        <div class="list list-inset home-list">
+          <a class="item" ui-sref="board">
+            Start
+          </a>
+        </div>
+      </div>
+    </ion-slide>
+  </ion-slide-box>
 </ion-view>

@@ -139,3 +139,46 @@ ion-content {
   -2px 2px 2px #9d6021,
   2px 2px 2px #9d6021;
 }
+
+.help-slide {
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 44px;
+  bottom: 0;
+  background: url('../img/background_wood.jpg');
+  background-size: cover;
+}
+
+.help-desc {
+  min-height: 80px;
+  font-size: 2vh;
+  margin: 5px;
+  padding: 5px;
+  background-size: cover;
+  background: url("../img/retina_wood.png") center center;
+  border: 1px solid #784400;
+  border-radius: 10px;
+  box-shadow: 2px 2px 30px rgba(0, 0, 0, 0.5);
+}
+
+.help-img, .help-logo {
+  text-align: center;
+  margin: 20px;
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 100px;
+  bottom: 20px;
+}
+
+.help-img img {
+  height: 100%;
+  width: auto;
+  box-shadow: 2px 2px 30px rgba(0, 0, 0, 0.5);
+}
+
+.help-logo img {
+  width: 100%;
+  height: auto;
+}
