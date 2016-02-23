@@ -22,9 +22,10 @@
     <a class="tab-item" ng-click="revert()">
       <i class="icon ion-arrow-return-left"></i>
     </a>
-    <a class="tab-item" disabled="disabled">
-      {{number - 1}}
-    </a>
+    <div class="tab-item score" disabled="disabled" id="score">
+      <div class="score-number">{{number - 1}}</div>
+      <div class="score-bar" ng-style="{'width': (number - 1) / 100 * scoreEl.offsetWidth + 'px'}"></div>
+    </div>
     <a class="tab-item" ng-click="restart()">
       <i class="icon ion-refresh"></i>
     </a>

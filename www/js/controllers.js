@@ -21,6 +21,7 @@ angular.module('game100.controllers', [])
     $scope.oldCords = [];
     $scope.oldRedo = [];
     $scope.checkLose = null;
+    $scope.scoreEl = document.getElementById('score');
 
     $scope.alertRestart = function (onConfirm, skipConfirm) {
       if ($scope.number > 1 && !skipConfirm)

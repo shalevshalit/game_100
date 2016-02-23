@@ -1,5 +1,6 @@
 ion-content {
-  background: url('../img/background.jpg');
+  background: url('../img/background_wood.jpg');
+  background-size: cover;
 }
 
 @font-face {
@@ -9,6 +10,7 @@ ion-content {
 
 .title {
   font-family: curved;
+  top: 2px !important;
   font-weight: bolder !important;
   font-size: 35px !important;
 }
@@ -65,8 +67,9 @@ ion-content {
   color: #28a54c;
 }
 
-.header-dark-wood {
-  background: url("../img/dark_wood.jpg") !important;
+.header-dark-wood, .actions {
+  background: url("../img/header_wood.jpg") !important;
+  background-size: cover !important;
 }
 
 .popup {
@@ -100,4 +103,35 @@ ion-content {
 
 .logo img {
   width: 100%;
+}
+
+.score {
+  position: relative;
+  font-size: 20px;
+  opacity: 1 !important;
+  font-weight: bold;
+  font-family: curved;
+  background-color: rgba(139, 69, 19, 0.3);
+}
+
+.score-bar {
+  background-color: rgba(139, 69, 19, 0.8);
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  -webkit-box-shadow: 2px 0 2px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 2px 0 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+.score-number {
+  position: absolute;
+  right: 0;
+  left: 0;
+  z-index: 2;
+  color: white;
+  text-shadow: -2px -2px 2px #9d6021,
+  2px -2px 2px #9d6021,
+  -2px 2px 2px #9d6021,
+  2px 2px 2px #9d6021;
 }
