@@ -41,6 +41,34 @@ angular.module('game100.controllers', [])
 
     $scope.setCurrent = function (x, y, redo) {
       $timeout.cancel($scope.checkLose);
+      if ($scope.number == 100)
+        var pop = $ionicPopup.show({
+          title: 'You Won!',
+          subTitle: 'Congratulations! You have won the game!',
+          cssClass: 'wider-popup',
+          buttons: [
+            {
+              text: 'Home',
+              type: 'popup-button icon ion-home',
+              onTap: function () {
+                $state.go('home');
+              }
+            },
+            {
+              text: 'Restart',
+              type: 'popup-button icon ion-refresh',
+              onTap: $scope.restart
+            },
+            {
+              text: 'Close',
+              type: 'popup-button icon ion-close-round',
+              onTap: function () {
+                pop.close();
+              }
+            }
+          ]
+        });
+
       $scope.oldCords.push($scope.currentX + ',' + $scope.currentY);
       $scope.oldRedo.push(redo);
 
