@@ -12,7 +12,7 @@
            ng-init="init(x,y)"
            ng-click="setNumber()">
         <div class="board-col-inner">
-          <div ng-show="::colNumber">{{::colNumber}}</div>
+          <div ng-show="colNumber">{{colNumber}}</div>
           <i ng-show="isClickable()" class="icon button-balanced clickable ion-ios-circle-filled"></i>
         </div>
       </div>
