@@ -6,14 +6,14 @@
   <ion-content class="board-outer has-header has-footer" scroll="false">
     <div class="board-row" ng-repeat="x in lengthArray">
       <div class="board-col calm-border"
-           ng-class="{'clicked':colNumber}"
+           ng-class="{'clicked': colNumber}"
            ng-repeat="y in lengthArray"
            ng-controller="ColCtrl"
            ng-init="init(x,y)"
            ng-click="setNumber()">
         <div class="board-col-inner">
-          <div ng-show="colNumber">{{colNumber}}</div>
-          <i ng-hide="colNumber || !isClickable()" class="icon button-balanced clickable ion-ios-circle-filled"></i>
+          <div ng-show="::colNumber">{{::colNumber}}</div>
+          <i ng-show="isClickable()" class="icon button-balanced clickable ion-ios-circle-filled"></i>
         </div>
       </div>
     </div>

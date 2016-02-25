@@ -12,11 +12,13 @@ angular.module('game100.controllers', [])
   })
 
   .controller('BoardCtrl', function ($scope, $timeout, $ionicPopup, $state) {
+    var me = this;
+
     $scope.number = 1;
     $scope.lengthArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    $scope.oldCords = [];
-    $scope.oldRedo = [];
-    $scope.checkLose = null;
+    me.oldCords = [];
+    me.oldRedo = [];
+    me.checkLose = null;
     $scope.scoreEl = document.getElementById('score');
 
     $scope.alertRestart = function (onConfirm, skipConfirm) {
@@ -40,7 +42,7 @@ angular.module('game100.controllers', [])
     };
 
     $scope.setCurrent = function (x, y, redo) {
-      $timeout.cancel($scope.checkLose);
+      $timeout.cancel(me.checkLose);
       if ($scope.number == 100)
         var pop = $ionicPopup.show({
           title: 'You Won!',
@@ -69,12 +71,12 @@ angular.module('game100.controllers', [])
           ]
         });
 
-      $scope.oldCords.push($scope.currentX + ',' + $scope.currentY);
-      $scope.oldRedo.push(redo);
+      me.oldCords.push($scope.currentX + ',' + $scope.currentY);
+      me.oldRedo.push(redo);
 
       $scope.currentX = x;
       $scope.currentY = y;
-      $scope.checkLose = $timeout(function () {
+      me.checkLose = $timeout(function () {
         if (!$scope.anyJumpable() && $state.current.name == 'board')
           $ionicPopup.show({
             title: 'No Available Moves!',
@@ -105,25 +107,25 @@ angular.module('game100.controllers', [])
     };
 
     $scope.revert = function () {
-      $timeout.cancel($scope.checkLose);
+      $timeout.cancel(me.checkLose);
       if ($scope.number > 1) {
-        var oldCord = $scope.oldCords.pop().split(',');
+        var oldCord = me.oldCords.pop().split(',');
 
         $scope.currentX = +oldCord[0];
         $scope.currentY = +oldCord[1];
-        $scope.oldRedo.pop()();
+        me.oldRedo.pop()();
         $scope.number--;
       }
     };
 
     $scope.restart = function (skipConfirm) {
       $scope.alertRestart(function () {
-        $timeout.cancel($scope.checkLose);
+        $timeout.cancel(me.checkLose);
         if ($scope.number > 1) {
           $scope.currentX = null;
           $scope.currentY = null;
-          $scope.oldCords = [];
-          $scope.oldRedo.forEach(function (redo) {
+          me.oldCords = [];
+          me.oldRedo.forEach(function (redo) {
             redo();
           });
           $scope.number = 1;
@@ -142,7 +144,7 @@ angular.module('game100.controllers', [])
           var aX = cords[0],
             aY = cords[1];
 
-          return aX > 0 && aX <= 10 && aY > 0 && aY <= 10 && $scope.oldCords.indexOf(aX + ',' + aY) == -1;
+          return aX > 0 && aX <= 10 && aY > 0 && aY <= 10 && me.oldCords.indexOf(aX + ',' + aY) == -1;
         })
     };
 
