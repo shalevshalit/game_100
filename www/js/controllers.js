@@ -1,6 +1,6 @@
 angular.module('game100.controllers', [])
 
-  .controller('MainCtrl', function ($scope, $state) {
+  .controller('MainCtrl', function ($scope, $ionicPopup) {
     $scope.sendMail = function () {
       if (window.cordova)
         window.plugins.emailComposer.showEmailComposerWithCallback(function () {
@@ -9,6 +9,14 @@ angular.module('game100.controllers', [])
       else
         window.open('mailto:shalevshalit@gmail.com')
     };
+
+    if (ionic.Platform.isAndroid())
+      $ionicPopup.confirm({
+        title: 'Download App?'
+      }).then(function (res) {
+        if (res)
+          window.open('https://play.google.com/store/apps/details?id=com.ionicframework.game100559923');
+      })
   })
 
   .controller('BoardCtrl', function ($scope, $timeout, $ionicPopup, $state) {
