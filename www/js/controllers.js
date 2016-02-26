@@ -1,6 +1,6 @@
-angular.module('game100.controllers', [])
+angular.module('game100.controllers', ['pusher-angular'])
 
-  .controller('MainCtrl', function ($scope, $ionicPopup) {
+  .controller('MainCtrl', function ($scope, $ionicPopup, $rootScope) {
     $scope.sendMail = function () {
       if (window.cordova)
         window.plugins.emailComposer.showEmailComposerWithCallback(function () {
@@ -16,7 +16,7 @@ angular.module('game100.controllers', [])
       }).then(function (res) {
         if (res)
           window.open('https://play.google.com/store/apps/details?id=com.ionicframework.game100559923');
-      })
+      });
   })
 
   .controller('BoardCtrl', function ($scope, $timeout, $ionicPopup, $state) {

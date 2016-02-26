@@ -5,10 +5,12 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('game100', ['ionic', 'game100.controllers'])
+angular.module('game100', ['ionic', 'game100.controllers', 'pusher-angular'])
 
-  .run(function ($ionicPlatform) {
+  .run(function ($ionicPlatform, $rootScope, $pusher) {
     $ionicPlatform.ready(function () {
+      var pusher = $pusher(new Pusher('3f0fe5289bb11eea2977'));
+      $rootScope.channel = pusher.subscribe('messages');
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
       if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
