@@ -48,7 +48,7 @@ ion-content {
   font-weight: bolder;
   box-shadow: inset 2px 2px 30px rgba(0, 0, 0, 0.5);
   border: 2px inset #c7801a;
-  background: url("../img/retina_wood.png") center center;
+  background: url("../img/retina_wood.jpg") center center;
 }
 
 .board-col-inner {
@@ -158,7 +158,7 @@ ion-content {
   margin: 5px;
   padding: 5px;
   background-size: cover;
-  background: url("../img/retina_wood.png") center center;
+  background: url("../img/retina_wood.jpg") center center;
   border: 1px solid #784400;
   border-radius: 10px;
   box-shadow: 2px 2px 30px rgba(0, 0, 0, 0.5);
