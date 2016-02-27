@@ -1,6 +1,6 @@
 angular.module('game100.controllers', ['pusher-angular'])
 
-  .controller('MainCtrl', function ($scope, $ionicPopup, $rootScope) {
+  .controller('MainCtrl', function ($scope, $ionicPopup) {
     $scope.sendMail = function () {
       if (window.cordova)
         window.plugins.emailComposer.showEmailComposerWithCallback(function () {
@@ -19,15 +19,56 @@ angular.module('game100.controllers', ['pusher-angular'])
       });
   })
 
-  .controller('BoardCtrl', function ($scope, $timeout, $ionicPopup, $state) {
+  .controller('BoardCtrl', function ($scope, $timeout, $ionicPopup, $state, $http, $ionicLoading, $rootScope) {
     var me = this;
 
     $scope.number = 1;
-    $scope.lengthArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     me.oldCords = [];
     me.oldRedo = [];
     me.checkLose = null;
     $scope.scoreEl = document.getElementById('score');
+    if (!$rootScope.gameId)
+      $rootScope.players = {};
+
+    $scope.startGame = function () {
+      $ionicLoading.show({
+        template: 'Loading...'
+      });
+
+      $http({
+        url: 'http://game100api.herokuapp.com/games/create',
+        method: "POST",
+        withCredentials: true,
+        data: $rootScope.players
+      }).success(function (data) {
+        var gameData = data.game;
+        $rootScope.gameId = gameData['id'];
+
+        $rootScope.multiplayer = true;
+        if (gameData['started']) {
+          $ionicLoading.hide();
+          $rootScope.yourTurn = gameData['player1'] == $rootScope.players['player1'];
+          $state.go('multiplayer-board');
+        } else {
+          $ionicLoading.show({
+            template: 'Waiting for opponenet...'
+          });
+          $rootScope.channel.bind($scope.getGameName(), function (data) {
+            if (data['started']) {
+              $rootScope.gameId = data['id'];
+              $ionicLoading.hide();
+              $rootScope.yourTurn = true;
+              $rootScope.channel.unbind($scope.getGameName());
+              $state.go('multiplayer-board');
+            }
+          });
+        }
+      });
+    };
+
+    $scope.getGameName = function () {
+      return 'move' + $rootScope.gameId;
+    };
 
     $scope.alertRestart = function (onConfirm, skipConfirm) {
       if ($scope.number > 1 && !skipConfirm)
@@ -49,8 +90,25 @@ angular.module('game100.controllers', ['pusher-angular'])
       });
     };
 
-    $scope.setCurrent = function (x, y, redo) {
+    $scope.sendMove = function (x, y, redo) {
       $timeout.cancel(me.checkLose);
+      if ($rootScope.multiplayer)
+        $http({
+          url: 'http://game100api.herokuapp.com/games/move',
+          method: "POST",
+          withCredentials: true,
+          data: {id: $rootScope.gameId, x: x, y: y}
+        }).success(function () {
+          $scope.setCurrent(x, y, redo);
+        });
+      else
+        $scope.setCurrent(x, y, redo);
+
+      return $scope.number;
+    };
+
+    $scope.setCurrent = function (x, y, redo) {
+      $scope.setEnemyTurn();
       if ($scope.number == 100)
         var pop = $ionicPopup.show({
           title: 'You Won!',
@@ -111,6 +169,7 @@ angular.module('game100.controllers', ['pusher-angular'])
             ]
           });
       }, 1000);
+
       return $scope.number++;
     };
 
@@ -163,11 +222,18 @@ angular.module('game100.controllers', ['pusher-angular'])
           (Math.abs($scope.currentX - x) == 2 && Math.abs($scope.currentY - y) == 2);
       else
         return true;
-    }
-  }
-)
+    };
 
-  .controller('ColCtrl', function ($scope) {
+    $scope.isYourTurn = function () {
+      return $rootScope.yourTurn;
+    };
+
+    $scope.setEnemyTurn = function (turn) {
+      $rootScope.yourTurn = (turn === true);
+    };
+  })
+
+  .controller('ColCtrl', function ($scope, $rootScope) {
     $scope.init = function (x, y) {
       $scope.x = x;
       $scope.y = y;
@@ -175,7 +241,7 @@ angular.module('game100.controllers', ['pusher-angular'])
 
     $scope.setNumber = function () {
       if ($scope.isClickable())
-        $scope.colNumber = $scope.$parent.setCurrent($scope.x, $scope.y, $scope.redo);
+        $scope.colNumber = $scope.$parent.sendMove($scope.x, $scope.y, $scope.redo);
     };
 
     $scope.redo = function () {
@@ -183,6 +249,14 @@ angular.module('game100.controllers', ['pusher-angular'])
     };
 
     $scope.isClickable = function () {
-      return !$scope.colNumber && $scope.$parent.jumpable($scope.x, $scope.y);
-    }
+      return (!$rootScope.multiplayer || $scope.$parent.isYourTurn()) && !$scope.colNumber && $scope.$parent.jumpable($scope.x, $scope.y);
+    };
+
+    $rootScope.channel.bind($scope.$parent.getGameName(), function (data) {
+      if (data.x == $scope.x && data.y == $scope.y && !$scope.colNumber) {
+        $scope.enemy = true;
+        $scope.colNumber = $scope.$parent.setCurrent(data.x, data.y, $scope.redo);
+        $scope.$parent.setEnemyTurn(true);
+      }
+    }, $scope, false);
   });
