@@ -1,6 +1,5 @@
 all_options = (1..10).to_a.product((1..10).to_a)
 arr = all_options.inject(Hash.new(-1)) { |h, k| h.merge k => 0 }
-a = 0
 
 def find(number, last_x = nil, last_y = nil, hash = nil)
   if last_x
@@ -22,6 +21,7 @@ def print_board(hash)
   hash.values.each_slice(10) do |vals|
     puts vals.map { |v| v.nonzero?.to_s.rjust(2) }.join(' - ')
   end
+  puts
 end
 
 all_options.each do |x, y|

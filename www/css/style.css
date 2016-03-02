@@ -109,7 +109,7 @@ ion-content {
 }
 
 .logo img {
-  max-width: 300px;
+  max-width: 250px;
   width: 100%;
 }
 
@@ -197,4 +197,14 @@ ion-content {
 
 .multiplayer .board-col.clicked.enemy {
   background: url("../img/retina_wood_enemy.jpg") center center !important;
+}
+
+.cancel-button {
+  margin-top: 5px;
+}
+
+.beta {
+  font-size: 10px;
+  color: blue;
+  font-style: italic;
 }

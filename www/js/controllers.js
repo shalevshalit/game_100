@@ -51,19 +51,26 @@ angular.module('game100.controllers', ['pusher-angular'])
           $state.go('multiplayer-board');
         } else {
           $ionicLoading.show({
-            template: 'Waiting for opponenet...'
+            template: '<div>Waiting for opponenet...</div>' +
+            '<button class="button cancel-button" ng-click="cancelMultiplayer()">Cancel</button>',
+            scope: $scope
           });
           $rootScope.channel.bind($scope.getGameName(), function (data) {
             if (data['started']) {
               $rootScope.gameId = data['id'];
-              $ionicLoading.hide();
               $rootScope.yourTurn = true;
               $rootScope.channel.unbind($scope.getGameName());
               $state.go('multiplayer-board');
+              $ionicLoading.hide();
             }
           });
         }
       });
+    };
+
+    $scope.cancelMultiplayer = function () {
+      $rootScope.channel.unbind($scope.getGameName());
+      $ionicLoading.hide();
     };
 
     $scope.getGameName = function () {
