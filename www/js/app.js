@@ -41,6 +41,13 @@ angular.module('game100', ['ionic', 'game100.controllers', 'game100.directives',
         controller: 'BoardCtrl'
       })
 
+
+      .state('picklvl', {
+        url: '/picklvl',
+        templateUrl: 'templates/pick-level.html',
+        controller: 'BoardCtrl'
+      })
+
       .state('multiplayer', {
         url: '/multiplayer',
         templateUrl: 'templates/multiplayer.html',

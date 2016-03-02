@@ -1,6 +1,6 @@
 angular.module('game100.controllers', ['pusher-angular'])
 
-  .controller('MainCtrl', function ($scope, $ionicPopup) {
+  .controller('MainCtrl', function ($scope, $state, $rootScope, $ionicPopup) {
     $scope.sendMail = function () {
       if (window.cordova)
         window.plugins.emailComposer.showEmailComposerWithCallback(function () {
@@ -17,6 +17,12 @@ angular.module('game100.controllers', ['pusher-angular'])
         if (res)
           window.open('https://play.google.com/store/apps/details?id=com.ionicframework.game100559923');
       });
+
+    $scope.openClassic = function () {
+      $rootScope.winNumber = 100;
+      $rootScope.level = null;
+      $state.go('board');
+    }
   })
 
   .controller('BoardCtrl', function ($scope, $timeout, $ionicPopup, $state, $http, $ionicLoading, $rootScope) {
@@ -26,9 +32,20 @@ angular.module('game100.controllers', ['pusher-angular'])
     me.oldCords = [];
     me.oldRedo = [];
     me.checkLose = null;
+    $http.get('levels/chapter1.json').success(function (data) {
+      $rootScope.maxLvl = window.localStorage.maxLvl || 1;
+      $rootScope.levels = data;
+    });
     $scope.scoreEl = document.getElementById('score');
     if (!$rootScope.gameId)
       $rootScope.players = {};
+
+    $scope.openLvl = function (lvl) {
+      $rootScope.level = lvl.board;
+      $rootScope.winNumber = lvl.winNumber;
+      $rootScope.currentLvl = lvl.i;
+      $state.go('board');
+    };
 
     $scope.startGame = function () {
       $ionicLoading.show({
@@ -111,71 +128,49 @@ angular.module('game100.controllers', ['pusher-angular'])
       else
         $scope.setCurrent(x, y, redo);
 
-      return $scope.number;
+      return $scope.number - 1;
     };
 
     $scope.setCurrent = function (x, y, redo) {
       $scope.setEnemyTurn();
-      if ($scope.number == 100)
-        var pop = $ionicPopup.show({
-          title: 'You Won!',
-          subTitle: 'Congratulations! You have won the game!',
-          cssClass: 'wider-popup',
-          buttons: [
-            {
-              text: 'Home',
-              type: 'popup-button icon ion-home',
-              onTap: function () {
-                $state.go('home');
-              }
-            },
-            {
-              text: 'Restart',
-              type: 'popup-button icon ion-refresh',
-              onTap: $scope.restart
-            },
-            {
-              text: 'Close',
-              type: 'popup-button icon ion-close-round',
-              onTap: function () {
-                pop.close();
-              }
-            }
-          ]
-        });
+      var won = $scope.number == $rootScope.winNumber;
+      if (won)
+        $rootScope.level ? $scope.lvlWinPop() : $scope.winPop();
 
       me.oldCords.push($scope.currentX + ',' + $scope.currentY);
       me.oldRedo.push(redo);
 
       $scope.currentX = x;
       $scope.currentY = y;
-      me.checkLose = $timeout(function () {
-        if (!$scope.anyJumpable() && $state.current.name == 'board')
-          $ionicPopup.show({
-            title: 'No Available Moves!',
-            subTitle: 'You have no moves left with ' + ($scope.number - 1) + ' blocks!',
-            cssClass: 'wider-popup',
-            buttons: [
-              {
-                text: 'Home',
-                type: 'popup-button icon ion-home',
-                onTap: function () {
-                  $state.go('home');
+
+      if (!won)
+        me.checkLose = $timeout(function () {
+          if (!$scope.anyJumpable() && $state.current.name == 'board')
+            $ionicPopup.show({
+              title: 'No Available Moves!',
+              subTitle: 'You have no moves left with ' + ($scope.number - 1) + ' blocks!',
+              cssClass: 'wider-popup',
+              buttons: [
+                {
+                  text: 'Home',
+                  type: 'popup-button icon ion-home',
+                  onTap: function () {
+                    $state.go('home');
+                  }
+                },
+                {
+                  text: 'Revert',
+                  type: 'popup-button icon ion-arrow-return-left',
+                  onTap: $scope.revert
+                },
+                {
+                  text: 'Restart',
+                  type: 'popup-button icon ion-refresh',
+                  onTap: $scope.restart
                 }
-              },
-              {
-                text: 'Revert',
-                type: 'popup-button icon ion-arrow-return-left',
-                onTap: $scope.revert
-              },
-              {
-                text: 'Restart',
-                type: 'popup-button icon ion-refresh',
-                onTap: $scope.restart
-              }
-            ]
-          });
-      }, 1000);
+              ]
+            });
+        }, 1000);
 
       return $scope.number++;
     };
@@ -190,6 +185,63 @@ angular.module('game100.controllers', ['pusher-angular'])
         me.oldRedo.pop()();
         $scope.number--;
       }
+    };
+
+    $scope.winPop = function () {
+      var pop = $ionicPopup.show({
+        title: 'You Won!',
+        subTitle: 'Congratulations! You have won the game!',
+        cssClass: 'wider-popup',
+        buttons: [
+          {
+            text: 'Home',
+            type: 'popup-button icon ion-home',
+            onTap: function () {
+              $state.go('home');
+            }
+          },
+          {
+            text: 'Restart',
+            type: 'popup-button icon ion-refresh',
+            onTap: $scope.restart
+          },
+          {
+            text: 'Close',
+            type: 'popup-button icon ion-close-round',
+            onTap: function () {
+              pop.close();
+            }
+          }
+        ]
+      });
+    };
+
+    $scope.lvlWinPop = function () {
+      if ($rootScope.currentLvl == $rootScope.maxLvl)
+        window.localStorage.maxLvl = ++$rootScope.maxLvl;
+
+      $ionicPopup.show({
+        title: 'Level ' + ($scope.currentLvl),
+        subTitle: 'You won the level!',
+        cssClass: 'wider-popup',
+        buttons: [
+          {
+            text: 'Home',
+            type: 'popup-button icon ion-home',
+            onTap: function () {
+              $state.go('home');
+            }
+          },
+          {
+            text: 'Next Level',
+            type: 'popup-button icon ion-arrow-right-a',
+            onTap: function () {
+              $scope.restart(true);
+              $scope.openLvl($rootScope.levels['lvl' + ($rootScope.currentLvl + 1)])
+            }
+          }
+        ]
+      });
     };
 
     $scope.restart = function (skipConfirm) {
@@ -218,7 +270,7 @@ angular.module('game100.controllers', ['pusher-angular'])
           var aX = cords[0],
             aY = cords[1];
 
-          return aX > 0 && aX <= 10 && aY > 0 && aY <= 10 && me.oldCords.indexOf(aX + ',' + aY) == -1;
+          return aX > 0 && aX <= 10 && aY > 0 && aY <= 10 && (!$rootScope.level || $rootScope.level[aY - 1][aX - 1]) && me.oldCords.indexOf(aX + ',' + aY) == -1;
         })
     };
 
@@ -259,11 +311,12 @@ angular.module('game100.controllers', ['pusher-angular'])
       return (!$rootScope.multiplayer || $scope.$parent.isYourTurn()) && !$scope.colNumber && $scope.$parent.jumpable($scope.x, $scope.y);
     };
 
-    $rootScope.channel.bind($scope.$parent.getGameName(), function (data) {
-      if (data.x == $scope.x && data.y == $scope.y && !$scope.colNumber) {
-        $scope.enemy = true;
-        $scope.colNumber = $scope.$parent.setCurrent(data.x, data.y, $scope.redo);
-        $scope.$parent.setEnemyTurn(true);
-      }
-    }, $scope, false);
+    if ($rootScope.multiplayer)
+      $rootScope.channel.bind($scope.$parent.getGameName(), function (data) {
+        if (data.x == $scope.x && data.y == $scope.y && !$scope.colNumber) {
+          $scope.enemy = true;
+          $scope.colNumber = $scope.$parent.setCurrent(data.x, data.y, $scope.redo);
+          $scope.$parent.setEnemyTurn(true);
+        }
+      }, $scope, false);
   });

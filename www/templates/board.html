@@ -1,7 +1,7 @@
 <ion-view ng-scroll="false">
   <div class="bar bar-header bar-calm header-dark-wood">
     <button class="button button-icon icon ion-home" ng-click="goHome()"></button>
-    <div class="h1 title">100</div>
+    <div class="h1 title">{{ level ? 'Level ' + currentLvl : 100}}</div>
   </div>
   <ion-content class="board-outer has-header has-footer" scroll="false">
     <board></board>
@@ -12,7 +12,7 @@
     </div>
     <div class="tab-item score" disabled="disabled" id="score">
       <div class="score-number">{{number - 1}}</div>
-      <div class="score-bar" ng-style="{'width': (number - 1) / 100 * scoreEl.offsetWidth + 'px'}"></div>
+      <div class="score-bar" ng-style="{'width': (number - 1) / winNumber * scoreEl.offsetWidth + 'px'}"></div>
     </div>
     <div class="tab-item" ng-click="restart()">
       <i class="icon ion-refresh"></i>

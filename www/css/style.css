@@ -84,11 +84,11 @@ ion-content {
   display: block !important;
 }
 
-.home-list {
+.home-list, .pick-list {
   background-color: transparent !important;
 }
 
-.home-list a {
+.home-list a, .pick-list a {
   border-color: black;
   text-align: center;
   background-position-y: center;
@@ -97,8 +97,12 @@ ion-content {
   margin-bottom: 2vh;
 }
 
-.home-list a.activated {
+.home-list a.activated, .pick-list a.activated {
   border: inset 1px white;
+}
+
+.pick-list a[disabled] {
+  background-image: url(../img/wood-disabled.jpg) !important;
 }
 
 .logo {
@@ -207,4 +211,22 @@ ion-content {
   font-size: 10px;
   color: blue;
   font-style: italic;
+}
+
+.levels .col {
+  border-color: black;
+  text-align: center;
+  background-position-y: center;
+  background-size: cover;
+  background-image: url(../img/wood.jpg);
+  margin-bottom: 2vh;
+}
+
+.hidden-col {
+  background: url(../img/retina_wood.jpg);
+  cursor: auto;
+}
+
+.hidden-col i {
+  visibility: hidden;
 }

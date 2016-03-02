@@ -1,0 +1,16 @@
+<ion-view>
+  <div class="bar bar-header bar-calm header-dark-wood">
+    <button class="button button-icon icon ion-home" ng-click="goHome()"></button>
+    <div class="h1 title">100</div>
+  </div>
+  <ion-content class="has-header">
+    <div class="list list-inset pick-list">
+      <a class="item"
+         ng-click="openLvl(lvl)"
+         ng-repeat="lvl in levels"
+         ng-disabled="lvl.i > maxLvl">
+        Level {{lvl.i}}
+      </a>
+    </div>
+  </ion-content>
+</ion-view>
