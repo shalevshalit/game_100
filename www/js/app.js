@@ -41,8 +41,13 @@ angular.module('game100', ['ionic', 'game100.controllers', 'game100.directives',
         controller: 'BoardCtrl'
       })
 
+      .state('pickChapter', {
+        url: '/pickchapter',
+        templateUrl: 'templates/pick-chapter.html',
+        controller: 'BoardCtrl'
+      })
 
-      .state('picklvl', {
+      .state('pickLvl', {
         url: '/picklvl',
         templateUrl: 'templates/pick-level.html',
         controller: 'BoardCtrl'

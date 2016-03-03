@@ -22,29 +22,50 @@ angular.module('game100.controllers', ['pusher-angular'])
       $rootScope.winNumber = 100;
       $rootScope.level = null;
       $state.go('board');
-    }
+    };
+    $rootScope.maxChapter = window.localStorage.maxChapter || 1;
   })
 
-  .controller('BoardCtrl', function ($scope, $timeout, $ionicPopup, $state, $http, $ionicLoading, $rootScope) {
+  .controller('BoardCtrl', function ($scope, $timeout, $ionicPopup, $state, $http,
+                                     $ionicLoading, $rootScope, $ionicScrollDelegate) {
     var me = this;
 
     $scope.number = 1;
     me.oldCords = [];
     me.oldRedo = [];
     me.checkLose = null;
-    $http.get('levels/chapter1.json').success(function (data) {
-      $rootScope.maxLvl = window.localStorage.maxLvl || 1;
-      $rootScope.levels = data;
-    });
     $scope.scoreEl = document.getElementById('score');
     if (!$rootScope.gameId)
       $rootScope.players = {};
+
+    $rootScope.$on('$stateChangeSuccess', function (event, state) {
+      $ionicScrollDelegate.scrollTop();
+      if (state.name == 'pickLvl')
+        $timeout(function () {
+          if (!$rootScope.levels['lvl' + $rootScope.maxLvl])
+            $ionicScrollDelegate.scrollBottom();
+          else {
+            var maxLvlTop = document.getElementById('lvl-list').children[$rootScope.maxLvl - 1].getBoundingClientRect().top - 50; // - header
+            $ionicScrollDelegate.scrollTo(0, maxLvlTop, true);
+          }
+        }, 400);
+    });
 
     $scope.openLvl = function (lvl) {
       $rootScope.level = lvl.board;
       $rootScope.winNumber = lvl.winNumber;
       $rootScope.currentLvl = lvl.i;
       $state.go('board');
+    };
+
+    $scope.openChapter = function (chapter) {
+      $rootScope.currentChapter = chapter;
+
+      $http.get('levels/chapter' + chapter + '.json').success(function (data) {
+        $rootScope.maxLvl = window.localStorage['chapter' + chapter + 'maxLvl'] || 1;
+        $rootScope.levels = data;
+      });
+      $state.go('pickLvl');
     };
 
     $scope.startGame = function () {
@@ -217,8 +238,14 @@ angular.module('game100.controllers', ['pusher-angular'])
     };
 
     $scope.lvlWinPop = function () {
-      if ($rootScope.currentLvl == $rootScope.maxLvl)
-        window.localStorage.maxLvl = ++$rootScope.maxLvl;
+      var chapterDone = false;
+      if ($rootScope.currentLvl == $rootScope.maxLvl) {
+        window.localStorage['chapter' + $rootScope.currentChapter + 'maxLvl'] = ++$rootScope.maxLvl;
+        if ($rootScope.currentChapter == $rootScope.maxChapter && !$rootScope.levels['lvl' + $rootScope.maxLvl]) {
+          window.localStorage.maxChapter = ++$rootScope.maxChapter;
+          chapterDone = true;
+        }
+      }
 
       $ionicPopup.show({
         title: 'Level ' + ($scope.currentLvl),
@@ -237,7 +264,10 @@ angular.module('game100.controllers', ['pusher-angular'])
             type: 'popup-button icon ion-arrow-right-a',
             onTap: function () {
               $scope.restart(true);
-              $scope.openLvl($rootScope.levels['lvl' + ($rootScope.currentLvl + 1)])
+              if (chapterDone)
+                $scope.openChapter($rootScope.maxChapter);
+              else
+                $scope.openLvl($rootScope.levels['lvl' + ($rootScope.currentLvl + 1)]);
             }
           }
         ]
