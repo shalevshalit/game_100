@@ -50,11 +50,12 @@ angular.module('game100.controllers', ['pusher-angular'])
             $ionicScrollDelegate.scrollTo(0, maxLvlTop, true);
           }
         }, 400);
+      else if (state.name == 'board')
+        $scope.restart(true);
     });
 
     $scope.openLvl = function (lvl) {
       if (!lvl.i || lvl.i <= $rootScope.maxLvl) {
-        $scope.restart(true);
 
         $rootScope.level = lvl.board;
         $rootScope.winNumber = lvl.winNumber;

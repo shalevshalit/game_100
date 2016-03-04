@@ -47,7 +47,7 @@ angular.module('game100', ['ionic', 'ngCordova', 'game100.controllers', 'game100
 
       .state('customLvl', {
         url: '/customlvl/:board',
-        templateUrl: 'templates/board.html',
+        templateUrl: 'templates/home.html',
         controller: 'BoardCtrl'
       })
 
