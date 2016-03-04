@@ -21,20 +21,21 @@ angular.module('game100.controllers', ['pusher-angular'])
     $scope.openClassic = function () {
       $rootScope.winNumber = 100;
       $rootScope.level = null;
+      $rootScope.currentLvl = null;
       $state.go('board');
     };
     $rootScope.maxChapter = window.localStorage.maxChapter || 1;
   })
 
-  .controller('BoardCtrl', function ($scope, $timeout, $ionicPopup, $state, $http,
-                                     $ionicLoading, $rootScope, $ionicScrollDelegate) {
+  .controller('BoardCtrl', function ($scope, $timeout, $ionicPopup, $state, $http, $stateParams,
+                                     $ionicLoading, $rootScope, $ionicScrollDelegate, $cordovaSocialSharing) {
     var me = this;
 
     $scope.number = 1;
     me.oldCords = [];
     me.oldRedo = [];
     me.checkLose = null;
-    $scope.scoreEl = document.getElementById('score');
+
     if (!$rootScope.gameId)
       $rootScope.players = {};
 
@@ -52,20 +53,27 @@ angular.module('game100.controllers', ['pusher-angular'])
     });
 
     $scope.openLvl = function (lvl) {
-      $rootScope.level = lvl.board;
-      $rootScope.winNumber = lvl.winNumber;
-      $rootScope.currentLvl = lvl.i;
-      $state.go('board');
+      if (!lvl.i || lvl.i <= $rootScope.maxLvl) {
+        $scope.restart(true);
+
+        $rootScope.level = lvl.board;
+        $rootScope.winNumber = lvl.winNumber;
+        $rootScope.currentLvl = lvl.i;
+        $state.go('board');
+      }
     };
 
     $scope.openChapter = function (chapter) {
-      $rootScope.currentChapter = chapter;
+      if (chapter <= $rootScope.maxChapter) {
+        $rootScope.currentChapter = chapter;
 
-      $http.get('levels/chapter' + chapter + '.json').success(function (data) {
-        $rootScope.maxLvl = window.localStorage['chapter' + chapter + 'maxLvl'] || 1;
-        $rootScope.levels = data;
-      });
-      $state.go('pickLvl');
+        $http.get('levels/chapter' + chapter + '.json').success(function (data) {
+          $rootScope.maxLvl = window.localStorage['chapter' + chapter + 'maxLvl'] || 1;
+          $rootScope.levels = data;
+        });
+
+        $state.go('pickLvl');
+      }
     };
 
     $scope.startGame = function () {
@@ -156,7 +164,7 @@ angular.module('game100.controllers', ['pusher-angular'])
       $scope.setEnemyTurn();
       var won = $scope.number == $rootScope.winNumber;
       if (won)
-        $rootScope.level ? $scope.lvlWinPop() : $scope.winPop();
+        $rootScope.currentLvl ? $scope.lvlWinPop() : $scope.winPop();
 
       me.oldCords.push($scope.currentX + ',' + $scope.currentY);
       me.oldRedo.push(redo);
@@ -263,7 +271,6 @@ angular.module('game100.controllers', ['pusher-angular'])
             text: 'Next Level',
             type: 'popup-button icon ion-arrow-right-a',
             onTap: function () {
-              $scope.restart(true);
               if (chapterDone)
                 $scope.openChapter($rootScope.maxChapter);
               else
@@ -320,6 +327,61 @@ angular.module('game100.controllers', ['pusher-angular'])
     $scope.setEnemyTurn = function (turn) {
       $rootScope.yourTurn = (turn === true);
     };
+
+    $scope.shareBoard = function () {
+      $ionicLoading.show({
+        template: 'Loading...'
+      });
+
+      var board = Array.apply(null, Array(100)).map(function () {
+        return 0
+      });
+
+      me.oldCords.forEach(function (cord) {
+        cord = cord.split(',');
+        if (+cord[0] && +cord[1])
+          board[(+cord[0] - 1) * 10 + +cord[1] - 1] = 1;
+      });
+      board[($scope.currentX - 1) * 10 + $scope.currentY - 1] = 1;
+
+      var link = 'https://game100api.herokuapp.com/boards/custom/' + board.join('');
+
+      if (window.cordova)
+        $cordovaSocialSharing
+          .share(null, null, null, link)
+          .then(function () {
+            $ionicLoading.hide();
+          }, function () {
+            $ionicLoading.hide();
+            $ionicPopup.alert({
+              title: 'Share error',
+              template: 'The board could not be shared'
+            });
+          });
+      else {
+        $ionicLoading.hide();
+        $ionicPopup.alert({
+          title: 'Share link',
+          template: '<a href="mailto:someone@example.com?Subject=' + link + '">Click here to Share!</a>'
+        });
+      }
+    };
+
+    if ($stateParams.board) {
+      var board = [],
+        winNumber = 0;
+
+      $stateParams.board.split('').forEach(function (col, i) {
+        if (i < 10)
+          board[i % 10] = [];
+        board[i % 10][Math.floor(i / 10)] = +col;
+        if (+col)
+          winNumber++;
+      });
+
+      $scope.openLvl({board: board, winNumber: winNumber});
+    }
+    $scope.scoreEl = document.getElementById('score');
   })
 
   .controller('ColCtrl', function ($scope, $rootScope) {

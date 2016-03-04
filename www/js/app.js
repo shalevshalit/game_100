@@ -5,9 +5,9 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('game100', ['ionic', 'game100.controllers', 'game100.directives', 'pusher-angular'])
+angular.module('game100', ['ionic', 'ngCordova', 'game100.controllers', 'game100.directives', 'pusher-angular'])
 
-  .run(function ($ionicPlatform, $rootScope, $pusher) {
+  .run(function ($ionicPlatform, $rootScope, $pusher, $state) {
     $ionicPlatform.ready(function () {
       var pusher = $pusher(new Pusher('3f0fe5289bb11eea2977'));
       $rootScope.channel = pusher.subscribe('moves');
@@ -23,6 +23,10 @@ angular.module('game100', ['ionic', 'game100.controllers', 'game100.directives',
         StatusBar.styleDefault();
       }
     });
+
+    window.handleOpenURL = function (url) {
+      $state.go('customLvl', {board: url.slice(16)});
+    };
   })
 
   .config(function ($stateProvider, $urlRouterProvider) {
@@ -37,6 +41,12 @@ angular.module('game100', ['ionic', 'game100.controllers', 'game100.directives',
 
       .state('board', {
         url: '/board',
+        templateUrl: 'templates/board.html',
+        controller: 'BoardCtrl'
+      })
+
+      .state('customLvl', {
+        url: '/customlvl/:board',
         templateUrl: 'templates/board.html',
         controller: 'BoardCtrl'
       })

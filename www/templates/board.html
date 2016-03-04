@@ -1,7 +1,9 @@
 <ion-view ng-scroll="false">
   <div class="bar bar-header bar-calm header-dark-wood">
     <button class="button button-icon icon ion-home" ng-click="goHome()"></button>
-    <div class="h1 title">{{ level ? 'LEVEL ' + currentLvl : 100}}</div>
+    <div class="h1 title">{{ level ? (currentLvl ? 'LEVEL ' + currentLvl : 'b CUSTOM') : 100}}</div>
+    <button ng-show="!currentLvl" ng-disabled="number <= 1" class="button button-icon icon ion-share"
+            ng-click="shareBoard()"></button>
   </div>
   <ion-content class="board-outer has-header has-footer" scroll="false">
     <board></board>
