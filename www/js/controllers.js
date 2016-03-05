@@ -272,6 +272,7 @@ angular.module('game100.controllers', ['pusher-angular'])
             text: 'Next Level',
             type: 'popup-button icon ion-arrow-right-a',
             onTap: function () {
+              $scope.restart(true);
               if (chapterDone)
                 $scope.openChapter($rootScope.maxChapter);
               else
