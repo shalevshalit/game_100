@@ -30,7 +30,12 @@ angular.module('game100', ['ionic', 'ngCordova', 'game100.controllers', 'game100
   })
 
   .config(function ($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise('/');
+    if (!window.localStorage.oldUser) {
+      $urlRouterProvider.otherwise('/help');
+      window.localStorage.oldUser = true;
+    } else
+      $urlRouterProvider.otherwise('/');
+
 
     $stateProvider
 
@@ -79,5 +84,4 @@ angular.module('game100', ['ionic', 'ngCordova', 'game100.controllers', 'game100
         url: '/help',
         templateUrl: 'templates/help.html'
       });
-
   });
