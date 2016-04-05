@@ -1,0 +1,17 @@
+<ion-view>
+  <ion-content>
+    <div class="logo"><img src="img/logo.png"/></div>
+    <div class="list list-inset">
+      <label class="item item-input">
+        <input type="text" placeholder="Email" ng-model="newUser.email">
+      </label>
+      <label class="item item-input">
+        <input type="password" placeholder="Password" ng-model="newUser.password">
+      </label>
+    </div>
+    <button class="button button-block button-positive" ng-click="signup()">
+      Sign Up
+    </button>
+    <div class="text-center card"><a ui-sref="login">Already have a user? Login!</a> | <a ui-sref="home">I will do it later</a></div>
+  </ion-content>
+</ion-view>

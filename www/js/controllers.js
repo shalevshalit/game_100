@@ -10,7 +10,7 @@ angular.module('game100.controllers', ['pusher-angular'])
         window.open('mailto:shalevshalit@gmail.com')
     };
 
-    if (ionic.Platform.isAndroid() && !window.cordova)
+    if (ionic.Platform.isAndroid() && !window.cordova && false) // TODO TODO
       $ionicPopup.confirm({
         title: 'Download App?'
       }).then(function (res) {
@@ -27,7 +27,60 @@ angular.module('game100.controllers', ['pusher-angular'])
     $rootScope.maxChapter = window.localStorage.maxChapter || 1;
   })
 
-  .controller('BoardCtrl', function ($scope, $timeout, $ionicPopup, $state, $http, $stateParams,
+  .controller('SessionCtrl', function ($scope, $state, $ionicPopup) {
+    $scope.newUser = {};
+
+    $scope.registerPush = function () {
+      var push = new Ionic.Push({
+        badge: true,
+        sound: true,
+        alert: true,
+        icon: 'icon'
+      });
+
+      push.register(function (token) {
+        push.saveToken(token);
+      });
+    };
+
+    var signupErrors = {
+      required_email: 'Missing E-mail field',
+      required_password: 'Missing Password field',
+      conflict_email: 'A User has already signed up with the supplied e-mail.',
+      conflict_username: 'A User has already signed up with the supplied username.',
+      invalid_email: 'The e-mail did not pass validation.'
+    };
+
+    $scope.signup = function () {
+      Ionic.Auth.signup($scope.newUser).then($scope.login,
+        function (data) {
+          var error = data.errors.map(function (err) {
+            return signupErrors[err];
+          }).join("<br>");
+          $ionicPopup.alert({
+            title: 'Sign Up error',
+            template: error
+          });
+        });
+    };
+
+    $scope.login = function (type) {
+      Ionic.Auth.login(type || 'basic', {remember: true}, $scope.newUser)
+        .then(function () {
+          console.log(arguments);
+          $scope.registerPush();
+          $state.go('home');
+        }, function (data) {
+          $ionicPopup.alert({
+            title: 'Bad Login',
+            template: data.response.body.error.message
+
+          });
+        });
+    };
+  })
+
+  .controller('BoardCtrl', function ($scope, $timeout, $ionicPopup, $pusher, $state, $http, $stateParams,
                                      $ionicLoading, $rootScope, $ionicScrollDelegate, $cordovaSocialSharing) {
     var me = this;
 
@@ -78,6 +131,8 @@ angular.module('game100.controllers', ['pusher-angular'])
     };
 
     $scope.startGame = function () {
+      var pusher = $pusher(new Pusher('3f0fe5289bb11eea2977'));
+      $rootScope.channel = pusher.subscribe('moves');
       $ionicLoading.show({
         template: 'Loading...'
       });

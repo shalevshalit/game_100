@@ -5,12 +5,12 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('game100', ['ionic', 'ngCordova', 'game100.controllers', 'game100.directives', 'pusher-angular'])
+angular.module('game100', ['ionic', 'ionic.service.core', 'ionic.service.analytics', 'ngCordova', 'game100.controllers', 'game100.directives', 'pusher-angular'])
 
-  .run(function ($ionicPlatform, $rootScope, $pusher, $state) {
+  .run(function ($ionicPlatform, $ionicAnalytics, $rootScope, $state) {
     $ionicPlatform.ready(function () {
-      var pusher = $pusher(new Pusher('3f0fe5289bb11eea2977'));
-      $rootScope.channel = pusher.subscribe('moves');
+      $ionicAnalytics.register();
+
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
       if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
@@ -30,11 +30,15 @@ angular.module('game100', ['ionic', 'ngCordova', 'game100.controllers', 'game100
   })
 
   .config(function ($stateProvider, $urlRouterProvider) {
+    var user = Ionic.User.current();
+
     if (!window.localStorage.oldUser) {
       $urlRouterProvider.otherwise('/help');
       window.localStorage.oldUser = true;
-    } else
+    } else if (user.isAuthenticated())
       $urlRouterProvider.otherwise('/');
+    else
+      $urlRouterProvider.otherwise('/login');
 
 
     $stateProvider
@@ -42,6 +46,18 @@ angular.module('game100', ['ionic', 'ngCordova', 'game100.controllers', 'game100
       .state('home', {
         url: '/',
         templateUrl: 'templates/home.html'
+      })
+
+      .state('signup', {
+        url: '/signup',
+        templateUrl: 'templates/registration/signup.html',
+        controller: 'SessionCtrl'
+      })
+
+      .state('login', {
+        url: '/login',
+        templateUrl: 'templates/registration/login.html',
+        controller: 'SessionCtrl'
       })
 
       .state('board', {

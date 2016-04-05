@@ -36,6 +36,5 @@
   },
   "_source": "git://github.com/pusher/pusher-angular.git",
   "_target": "~0.1.9",
-  "_originalSource": "pusher-angular",
-  "_direct": true
+  "_originalSource": "pusher-angular"
 }
