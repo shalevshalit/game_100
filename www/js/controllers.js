@@ -24,7 +24,7 @@ angular.module('game100.controllers', ['pusher-angular'])
       $rootScope.currentLvl = null;
       $state.go('board');
     };
-    $rootScope.maxChapter = window.localStorage.maxChapter || 1;
+    $rootScope.maxChapter = Ionic.User.current().get('maxChapter', 1);
   })
 
   .controller('SessionCtrl', function ($scope, $state, $ionicPopup) {
@@ -67,7 +67,16 @@ angular.module('game100.controllers', ['pusher-angular'])
       Ionic.Auth.login(type || 'basic', {remember: true}, $scope.newUser)
         .then(function () {
           $scope.registerPush();
-          $state.go('home');
+
+          var user = Ionic.User.current();
+
+          if (user.get('seenHelp'))
+            $state.go('home');
+          else {
+            $state.go('help');
+            user.set('seenHelp', true);
+            user.save();
+          }
         }, function (data) {
           $ionicPopup.alert({
             title: 'Bad Login',
@@ -120,7 +129,7 @@ angular.module('game100.controllers', ['pusher-angular'])
         $rootScope.currentChapter = chapter;
 
         $http.get('levels/chapter' + chapter + '.json').success(function (data) {
-          $rootScope.maxLvl = window.localStorage['chapter' + chapter + 'maxLvl'] || 1;
+          $rootScope.maxLvl = Ionic.User.current().get('chapter' + chapter + 'maxLvl', 1);
           $rootScope.levels = data;
         });
 
@@ -302,11 +311,13 @@ angular.module('game100.controllers', ['pusher-angular'])
     $scope.lvlWinPop = function () {
       var chapterDone = false;
       if ($rootScope.currentLvl == $rootScope.maxLvl) {
-        window.localStorage['chapter' + $rootScope.currentChapter + 'maxLvl'] = ++$rootScope.maxLvl;
+        var user = Ionic.User.current();
+        user.set('chapter' + $rootScope.currentChapter + 'maxLvl', ++$rootScope.maxLvl);
         if ($rootScope.currentChapter == $rootScope.maxChapter && !$rootScope.levels['lvl' + $rootScope.maxLvl]) {
-          window.localStorage.maxChapter = ++$rootScope.maxChapter;
+          user.set('maxChapter', ++$rootScope.maxChapter);
           chapterDone = true;
         }
+        user.save();
       }
 
       $ionicPopup.show({
@@ -359,11 +370,11 @@ angular.module('game100.controllers', ['pusher-angular'])
         [x + 3, y], [x - 3, y], [x, y + 3], [x, y - 3],
         [x - 2, y - 2], [x + 2, y - 2], [x - 2, y + 2], [x + 2, y + 2]
       ].some(function (cords) {
-          var aX = cords[0],
-            aY = cords[1];
+        var aX = cords[0],
+          aY = cords[1];
 
-          return aX > 0 && aX <= 10 && aY > 0 && aY <= 10 && (!$rootScope.level || $rootScope.level[aY - 1][aX - 1]) && me.oldCords.indexOf(aX + ',' + aY) == -1;
-        })
+        return aX > 0 && aX <= 10 && aY > 0 && aY <= 10 && (!$rootScope.level || $rootScope.level[aY - 1][aX - 1]) && me.oldCords.indexOf(aX + ',' + aY) == -1;
+      })
     };
 
     $scope.jumpable = function (x, y) {

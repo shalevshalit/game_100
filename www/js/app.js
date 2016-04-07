@@ -32,10 +32,7 @@ angular.module('game100', ['ionic', 'ionic.service.core', 'ionic.service.analyti
   .config(function ($stateProvider, $urlRouterProvider) {
     var user = Ionic.User.current();
 
-    if (!window.localStorage.oldUser) {
-      $urlRouterProvider.otherwise('/help');
-      window.localStorage.oldUser = true;
-    } else if (user.isAuthenticated())
+    if (user.isAuthenticated())
       $urlRouterProvider.otherwise('/');
     else
       $urlRouterProvider.otherwise('/login');
