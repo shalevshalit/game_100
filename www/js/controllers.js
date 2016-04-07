@@ -32,10 +32,9 @@ angular.module('game100.controllers', ['pusher-angular'])
 
     $scope.registerPush = function () {
       var push = new Ionic.Push({
-        badge: true,
+        badge: false,
         sound: true,
-        alert: true,
-        icon: 'icon'
+        alert: true
       });
 
       push.register(function (token) {
@@ -67,7 +66,6 @@ angular.module('game100.controllers', ['pusher-angular'])
     $scope.login = function (type) {
       Ionic.Auth.login(type || 'basic', {remember: true}, $scope.newUser)
         .then(function () {
-          console.log(arguments);
           $scope.registerPush();
           $state.go('home');
         }, function (data) {
