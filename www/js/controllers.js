@@ -103,8 +103,7 @@ angular.module('game100.controllers', ['pusher-angular'])
   .controller('BoardCtrl', function ($scope, $timeout, $ionicPopup, $pusher, $state, $http, $stateParams,
                                      $ionicLoading, $ionicBackdrop, $rootScope, $ionicScrollDelegate,
                                      $cordovaSocialSharing) {
-    var me = this,
-      helpPanel = document.getElementsByTagName('intro-help')[0];
+    var me = this;
 
     $scope.number = 1;
     me.oldCords = [];
@@ -112,15 +111,11 @@ angular.module('game100.controllers', ['pusher-angular'])
     me.checkLose = null;
     var user = Ionic.User.current();
 
-    FB.api('/113124472034820', function (response) {
-      console.log(response);
-    });
-
     if (!$rootScope.gameId)
       $rootScope.players = {};
 
     $scope.showIntroHelp = function () {
-      helpPanel.className = 'visible';
+      document.getElementsByTagName('intro-help')[0].className = 'visible';
       $ionicBackdrop.retain();
     };
 
