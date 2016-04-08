@@ -9,12 +9,17 @@
         <input type="password" placeholder="Password" ng-model="newUser.password">
       </label>
     </div>
-    <button class="button button-block button-positive" ng-click="login()">
+    <button class="button button-block button-calm" ng-click="login()">
       Login
     </button>
-    <button class="button button-block button-calm" ng-click="login('facebook')">
+    <button class="button button-block button-positive" ng-click="login('facebook')">
+      <i class="icon ion-social-facebook"></i>
       Login with Facebook
     </button>
-    <div class="text-center card"><a ui-sref="signup">Sign Up</a> | <a ui-sref="home">I will do it later</a></div>
+    <button class="button button-block button-assertive" ng-click="login('google')">
+      <i class="icon ion-social-googleplus"></i>
+      Login with Google+
+    </button>
+    <div class="text-center card"><a ui-sref="signup">Sign Up</a></div>
   </ion-content>
 </ion-view>
