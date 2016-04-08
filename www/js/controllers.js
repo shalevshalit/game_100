@@ -24,7 +24,7 @@ angular.module('game100.controllers', ['pusher-angular'])
       $rootScope.currentLvl = null;
       $state.go('board');
     };
-    $rootScope.maxChapter = Ionic.User.current().get('maxChapter', 1);
+    $rootScope.maxChapter = Ionic.User.current().get('maxChapter', window.localStorage.maxChapter || 1);
   })
 
   .controller('SessionCtrl', function ($scope, $state, $ionicPopup) {
@@ -148,7 +148,7 @@ angular.module('game100.controllers', ['pusher-angular'])
         $rootScope.currentChapter = chapter;
 
         $http.get('levels/chapter' + chapter + '.json').success(function (data) {
-          $rootScope.maxLvl = user.get('chapter' + chapter + 'maxLvl', 1);
+          $rootScope.maxLvl = user.get('chapter' + chapter + 'maxLvl', window.localStorage['chapter' + chapter + 'maxLvl'] || 1);
           $rootScope.levels = data;
         });
 
