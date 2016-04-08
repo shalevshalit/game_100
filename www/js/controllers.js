@@ -10,7 +10,7 @@ angular.module('game100.controllers', ['pusher-angular'])
         window.open('mailto:shalevshalit@gmail.com')
     };
 
-    if (ionic.Platform.isAndroid() && !window.cordova && false) // TODO TODO
+    if (ionic.Platform.isAndroid() && !window.cordova)
       $ionicPopup.confirm({
         title: 'Download App?'
       }).then(function (res) {
