@@ -87,17 +87,42 @@ angular.module('game100.controllers', ['pusher-angular'])
     };
   })
 
+  .controller('HelpCtrl', function ($scope, $ionicSlideBoxDelegate, $state) {
+    $scope.next = function () {
+      if ($scope.lastSlide())
+        $state.go('home');
+      else
+        $ionicSlideBoxDelegate.next();
+    };
+
+    $scope.lastSlide = function () {
+      return $ionicSlideBoxDelegate.currentIndex() == $ionicSlideBoxDelegate.slidesCount() - 1
+    }
+  })
+
   .controller('BoardCtrl', function ($scope, $timeout, $ionicPopup, $pusher, $state, $http, $stateParams,
-                                     $ionicLoading, $rootScope, $ionicScrollDelegate, $cordovaSocialSharing) {
-    var me = this;
+                                     $ionicLoading, $ionicBackdrop, $rootScope, $ionicScrollDelegate,
+                                     $cordovaSocialSharing) {
+    var me = this,
+      helpPanel = document.getElementsByTagName('intro-help')[0];
 
     $scope.number = 1;
     me.oldCords = [];
     me.oldRedo = [];
     me.checkLose = null;
+    var user = Ionic.User.current();
+
+    FB.api('/113124472034820', function (response) {
+      console.log(response);
+    });
 
     if (!$rootScope.gameId)
       $rootScope.players = {};
+
+    $scope.showIntroHelp = function () {
+      helpPanel.className = 'visible';
+      $ionicBackdrop.retain();
+    };
 
     $rootScope.$on('$stateChangeSuccess', function (event, state) {
       $ionicScrollDelegate.scrollTop();
@@ -112,11 +137,14 @@ angular.module('game100.controllers', ['pusher-angular'])
 
     $scope.openLvl = function (lvl) {
       if (!lvl.i || lvl.i <= $rootScope.maxLvl) {
-
         $rootScope.level = lvl.board;
         $rootScope.winNumber = lvl.winNumber;
         $rootScope.currentLvl = lvl.i;
         $state.go('board');
+        if (lvl.i == 1 && $rootScope.currentChapter == 1 && !user.get('seenIntro'))
+          $timeout(function () {
+            $scope.showIntroHelp();
+          }, 400);
       }
     };
 
@@ -125,7 +153,7 @@ angular.module('game100.controllers', ['pusher-angular'])
         $rootScope.currentChapter = chapter;
 
         $http.get('levels/chapter' + chapter + '.json').success(function (data) {
-          $rootScope.maxLvl = Ionic.User.current().get('chapter' + chapter + 'maxLvl', 1);
+          $rootScope.maxLvl = user.get('chapter' + chapter + 'maxLvl', 1);
           $rootScope.levels = data;
         });
 
@@ -307,7 +335,6 @@ angular.module('game100.controllers', ['pusher-angular'])
     $scope.lvlWinPop = function () {
       var chapterDone = false;
       if ($rootScope.currentLvl == $rootScope.maxLvl) {
-        var user = Ionic.User.current();
         user.set('chapter' + $rootScope.currentChapter + 'maxLvl', ++$rootScope.maxLvl);
         if ($rootScope.currentChapter == $rootScope.maxChapter && !$rootScope.levels['lvl' + $rootScope.maxLvl]) {
           user.set('maxChapter', ++$rootScope.maxChapter);

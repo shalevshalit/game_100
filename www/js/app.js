@@ -5,11 +5,12 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('game100', ['ionic', 'ionic.service.core', 'ionic.service.analytics', 'ngCordova', 'game100.controllers', 'game100.directives', 'pusher-angular'])
+angular.module('game100', ['ionic', 'ionic.service.core', 'ionic.service.analytics', 'ngCordova',
+  'game100.controllers', 'game100.directives', 'pusher-angular'])
 
   .run(function ($ionicPlatform, $ionicAnalytics, $rootScope, $state) {
     $ionicPlatform.ready(function () {
-      $ionicAnalytics.register();
+      $ionicAnalytics.register({silent: true});
 
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
@@ -95,6 +96,7 @@ angular.module('game100', ['ionic', 'ionic.service.core', 'ionic.service.analyti
 
       .state('help', {
         url: '/help',
-        templateUrl: 'templates/help.html'
+        templateUrl: 'templates/help.html',
+        controller: 'HelpCtrl',
       });
   });

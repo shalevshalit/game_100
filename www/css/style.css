@@ -230,3 +230,24 @@ ion-content {
 .hidden-col i {
   visibility: hidden;
 }
+
+.top-col {
+  position: absolute;
+  z-index: 900;
+}
+
+.absolute-card {
+  position: absolute;
+  z-index: 901;
+  right: 0;
+  left: 0;
+  top: 30px;
+}
+
+intro-help {
+  visibility: hidden;
+}
+
+intro-help.visible {
+  visibility: visible !important;
+}

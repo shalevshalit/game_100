@@ -2,6 +2,7 @@
   <div class="bar bar-header bar-calm header-dark-wood">
     <button class="button button-icon icon ion-home" ui-sref="home"></button>
     <div class="h1 title">Help</div>
+    <button class="button button-clear" ng-click="next()">{{lastSlide() ? 'Done' : 'Next'}}</button>
   </div>
   <ion-slide-box class="help-slide">
     <ion-slide>
@@ -54,7 +55,7 @@
       <div class="help-logo">
         <img src="img/logo.png"/>
         <div class="list list-inset home-list">
-          <a class="item" ui-sref="board">
+          <a class="item" ui-sref="home">
             Start
           </a>
         </div>
