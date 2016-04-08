@@ -105,10 +105,6 @@ angular.module('game100.controllers', ['pusher-angular'])
         $timeout(function () {
           if (!$rootScope.levels['lvl' + $rootScope.maxLvl])
             $ionicScrollDelegate.scrollBottom();
-          else {
-            var maxLvlTop = document.getElementById('lvl-list').children[$rootScope.maxLvl - 1].getBoundingClientRect().top - 50; // - header
-            $ionicScrollDelegate.scrollTo(0, maxLvlTop, true);
-          }
         }, 400);
       else if (state.name == 'board')
         $scope.restart(true);
@@ -370,11 +366,11 @@ angular.module('game100.controllers', ['pusher-angular'])
         [x + 3, y], [x - 3, y], [x, y + 3], [x, y - 3],
         [x - 2, y - 2], [x + 2, y - 2], [x - 2, y + 2], [x + 2, y + 2]
       ].some(function (cords) {
-        var aX = cords[0],
-          aY = cords[1];
+          var aX = cords[0],
+            aY = cords[1];
 
-        return aX > 0 && aX <= 10 && aY > 0 && aY <= 10 && (!$rootScope.level || $rootScope.level[aY - 1][aX - 1]) && me.oldCords.indexOf(aX + ',' + aY) == -1;
-      })
+          return aX > 0 && aX <= 10 && aY > 0 && aY <= 10 && (!$rootScope.level || $rootScope.level[aY - 1][aX - 1]) && me.oldCords.indexOf(aX + ',' + aY) == -1;
+        })
     };
 
     $scope.jumpable = function (x, y) {

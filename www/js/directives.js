@@ -7,6 +7,7 @@ angular.module('game100.directives', ['ionic'])
       transclude: true,
       template: '<div class="board-row" ng-repeat="x in lengthArray">\
       <div class="board-col calm-border"\
+       id="col{{x}}-{{y}}"\
        ng-class="{\'clicked\': colNumber,\'hidden-col\': level && !level[y-1][x-1],\'multi-player\': multiplayer, \'enemy\': enemy}"\
        ng-repeat="y in lengthArray"\
        ng-controller="ColCtrl"\
