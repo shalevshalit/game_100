@@ -19,8 +19,6 @@ angular.module('game100.directives', ['ionic'])
        </div>\
       </div>',
       link: function (scope, element) {
-        var user = Ionic.User.current();
-
         scope.helpLvl = 0;
         scope.helps = [
           {
@@ -72,6 +70,8 @@ angular.module('game100.directives', ['ionic'])
           $ionicBackdrop.release();
 
           if (!skipSeen) {
+            var user = Ionic.User.current();
+
             user.set('seenIntro', true);
             user.save();
           }
